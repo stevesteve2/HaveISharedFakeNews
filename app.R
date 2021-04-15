@@ -126,12 +126,7 @@ emotiondictionary = quanteda::dictionary(list(PositiveAffect = PositiveAffect,
 
 
 token <- rtweet::create_token(
-   app = "Second Tweet Scraper",
-   consumer_key = "RCWVl1UC6pnYv7BDFArdaSiyI",
-   consumer_secret = "R2bduY0muh7LHzfUbeSNIpEjvYFhin3kAPeXWQb28F30LLCxOT",
-   access_token = "2170520472-51D7PwZFLymx6Ki36Il22ppJtdGBaApCl6gICf2",
-   access_secret = "GML5RV1GzxwqOPb4TjJ422pE9gIBzAMvmvzeckb1JiTUX",
-   set_renv = FALSE
+   ##ADD YOUR PRIVATE TWITTER TOKEN INFO HERE 
  )
 
 ui <- function(request) { fluidPage(
@@ -372,8 +367,8 @@ ui <- function(request) { fluidPage(
 server <- function(input, output, session) {
   
   #Connect to database
-  url_path <- "mongodb+srv://admin-steve:steve@cluster0.l1fjf.mongodb.net/fakenews" 
-  mongo <- mongo(collection = "fakenews", db = "fakenews", 
+  url_path <- ##ADD YOUR DATABASE PATH
+  mongo <- mongo(collection = #ADD YOUR COLLECTION AND DATABASE NAME TO STORE DATA
                  url = url_path, 
                  verbose = TRUE)
   
@@ -392,9 +387,6 @@ server <- function(input, output, session) {
         followers <- timeline$followers_count[1]
         following <- timeline$friends_count[1]
         length <- nrow(timeline)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"numTweets": ', length,'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"followers": ', followers,'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"following": ', following,'}}', sep=""), upsert = TRUE)
         timeline <- unlist(timeline$urls_expanded_url)
         timeline <-  gsub("https://", "", timeline)
         timeline <-  gsub("http://", "", timeline)
@@ -501,22 +493,6 @@ server <- function(input, output, session) {
         group_by(Counts) %>%
         arrange(desc(Counts))
       
-      if (input$myTwitter != 2) {
-       #mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Tweetcount": ', counts[9],'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProDemFake": ', ProDemFakeNews_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProRepubFake": ', ProDemRepubFakeNews_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"GeneralFake": ', FakeNewsGeneral_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProDemReal": ', DemocratRealNews_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"LeanDemReal": ', LeaningDemocratic_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProRepubReal": ', ProRepublican_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"LeanRepubReal": ', LeaningRepublican_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"RealGeneral": ', RealNewsGeneral_Count,'}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handle": "', as.character(input$username),'"}}', sep=""), upsert = TRUE)
-       mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"userid": "', userid,'"}}', sep=""), upsert = TRUE)
-      } else {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleNOTUSER": "', as.character(input$username),'"}}', sep=""), upsert = TRUE)
-      }
-      
       return(dataframe)
     })
     
@@ -558,9 +534,6 @@ server <- function(input, output, session) {
       followers <- timeline$followers_count[1]
       following <- timeline$friends_count[1]
       length <- nrow(timeline)
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"numTweetsEMOTION": ', length,'}}', sep=""), upsert = TRUE)
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"followersEMOTION": ', followers,'}}', sep=""), upsert = TRUE)
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"followingEMOTION": ', following,'}}', sep=""), upsert = TRUE)
       retweets <- timeline$retweet_count
       timeline <- timeline$text
       timelinecorpus = corpus(timeline)
@@ -609,17 +582,6 @@ server <- function(input, output, session) {
       Category <- c("Moral-Emotional", "Positive Emotion", "Negative Emotion", "Polarizing")
       Counts <- c(MoralPerTweet, PositivePerTweet, NegativePerTweet, PolarizingPerTweet)
       Norm <- c("0.26", "0.92", "0.67", "0.27")
-      
-      if (input$myTwitter2 != 2) {
-        #mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Tweetcount": ', counts[9],'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"MoralEmotional_Count": ', MoralEmotional_Count,'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"PositiveEmotion_Count": ', PositiveEmotion_Count,'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"NegativeEmotion_Count": ', NegativeEmotion_Count,'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Polarizing_Count": ', Polarizing_Count,'}}', sep=""), upsert = TRUE)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleEMOTION": "', as.character(input$username2),'"}}', sep=""), upsert = TRUE)
-      } else {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleNOTUSEREMOTION": "', as.character(input$username),'"}}', sep=""), upsert = TRUE)
-      }
 
       dataframe <- data.frame(Category, Counts) %>%
         arrange(desc(Counts))
@@ -710,11 +672,6 @@ server <- function(input, output, session) {
     ))
     
     observeEvent(input$search, {
-      if (input$myTwitter != 2) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleUserInput": "', as.character(input$username),'"}}', sep=""), upsert = TRUE)
-      } else {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleUserInputOTHER": "', as.character(input$username),'"}}', sep=""), upsert = TRUE)
-      }
       if (is.null(input$submitModal2)) { #Check if they've already filled out these answers
       showModal(
         (modalDialog(
@@ -955,29 +912,9 @@ server <- function(input, output, session) {
         output$ProgressBarComplete <- renderText({
           on.exit(progress$close())
         })
-        
-        #Save data 
-        # if (input$myTwitter == 1) {
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Tweetcount": ', counts[9],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProDemFake": ', counts[1],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProRepubFake": ', counts[2],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"GeneralFake": ', counts[3],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProDemReal": ', counts[4],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"LeanDemReal": ', counts[5],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"ProRepubReal": ', counts[6],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"LeanRepubReal": ', counts[7],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"RealGeneral": ', counts[8],'}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handle": "', as.character(counts[10]),'"}}', sep=""), upsert = TRUE)
-        # mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"userid": "', userid,'"}}', sep=""), upsert = TRUE)
-        # }
     })
     
     observeEvent(input$search2, {
-      if (input$myTwitter != 2) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleUserInputEMOTION": "', as.character(input$username2),'"}}', sep=""), upsert = TRUE)
-      } else {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"handleUserInputEMOTIONOTHER": ', as.character(input$username2),'"}}', sep=""), upsert = TRUE)
-      }
       if (is.null(input$submitModal3)) { #Check if they've already filled out these answers
         showModal(
           (modalDialog(
@@ -1158,33 +1095,15 @@ server <- function(input, output, session) {
       education <- input$education
       politics <- input$politics
       ethnicity <- input$ethnicity
-      if (!is.null(gender)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Gender": ', input$gender,'}}', sep=""), upsert = TRUE)
-      }
-      if (!is.na(age)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Age": ', input$age,'}}', sep=""), upsert = TRUE)
-      }
-      if (!is.null(education)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Education": ', input$education,'}}', sep=""), upsert = TRUE)
-      }
-      if (!is.null(politics)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Politics": ', input$politics,'}}', sep=""), upsert = TRUE)
-      }
-      if (!is.null(ethnicity)) {
-        ethnicity <- toString(ethnicity)
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Ethnicity": "', ethnicity,'"}}', sep=""), upsert = TRUE)
-      }
     })
     
     observeEvent(input$consent, {
       output$userid <- renderText({
         paste(userid)
       })
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Consent": ', input$consent,'}}', sep=""), upsert = TRUE)
     })
     
     observeEvent(input$myTwitter, {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"myTwitter": ', 1,'}}', sep=""), upsert = TRUE)
     })
     
     observeEvent(input$submitModal2, {
@@ -1195,19 +1114,14 @@ server <- function(input, output, session) {
       mentalHealth <- input$mentalHealth
       vaccineLikely <- input$vaccineLikely
       if (!is.null(democratFavorable)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"democratFavorable": ', input$democratFavorable,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(republicanFavorable)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"republicanFavorable": ', input$republicanFavorable,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(lifeSatisfaction)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"lifeSatisfaction": ', input$lifeSatisfaction,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(mentalHealth)) {
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"mentalHealth": ', input$mentalHealth,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(vaccineLikely)) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"vaccineLikely": ', input$vaccineLikely,'}}', sep=""), upsert = TRUE)
       }
     })
     
@@ -1219,25 +1133,19 @@ server <- function(input, output, session) {
       Open4 <- input$Open4
       Open5 <- input$Open5
       if (!is.null(Open1)) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Open1": ', input$Open1,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(Open2)) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Open2": ', input$Open2,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(Open3)) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Open3": ', input$Open3,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(Open4)) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Open4": ', input$Open4,'}}', sep=""), upsert = TRUE)
       }
       if (!is.null(Open5)) {
-        mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"Open5": ', input$Open5,'}}', sep=""), upsert = TRUE)
       }
     })
     
     observeEvent(input$sharingGoals, {
       input <- toString(input$goals)
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"sharingGoals": "', input,'"}}', sep=""), upsert = TRUE)
     })
     
     # observeEvent(input$sharingSubmit, {
@@ -1259,7 +1167,6 @@ server <- function(input, output, session) {
     
     observeEvent(input$screenshot, {
       screenshot()
-      mongo$update(paste('{"userid": "', userid,'"}', sep=""), paste('{"$set": {"screenshort": ', 1,'}}', sep=""), upsert = TRUE)
     })
 }
 
