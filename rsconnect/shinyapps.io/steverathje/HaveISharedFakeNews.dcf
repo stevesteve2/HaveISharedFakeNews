@@ -1,0 +1,12 @@
+name: HaveISharedFakeNews
+title: HaveISharedFakeNews
+username:
+account: steverathje
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2454451
+bundleId: 4365486
+url: https://newsfeedback.shinyapps.io/HaveISharedFakeNews/
+when: 1616098377.22748
+asMultiple: FALSE
+asStatic: FALSE

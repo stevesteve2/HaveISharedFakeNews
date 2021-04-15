@@ -1,0 +1,12 @@
+name: FakeNewsTwitter
+title: FakeNewsTwitter
+username:
+account: steverathje
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2454423
+bundleId: 3539237
+url: https://steverathje.shinyapps.io/fakenewstwitter/
+when: 1597953487.82205
+asMultiple: FALSE
+asStatic: FALSE
